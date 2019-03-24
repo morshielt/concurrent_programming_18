@@ -7,46 +7,47 @@
 #include <type_traits>
 
 class Turnstile {
- public:
-  std::mutex mtex;
-  std::condition_variable cv;
-  size_t how_many_waiting;
-  bool ready_for_next;
+public:
+    std::mutex mtex;
+    std::condition_variable cv;
+    size_t how_many_waiting;
+    bool ready_for_next;
 
-  Turnstile();
+    Turnstile();
 };
 
 class Turnstile_Pool {
- private:
-  size_t INIT_T;
-  std::queue<Turnstile *> available_turnstiles;
-  std::mutex shield;
+private:
+    size_t INIT_T;
+    std::queue<Turnstile *> available_turnstiles;
+    std::mutex shield;
 
- public:
-  Turnstile_Pool();
+public:
+    Turnstile_Pool();
 
-  ~Turnstile_Pool();
+    ~Turnstile_Pool();
 
-  Turnstile *give_turnstile();
+    Turnstile *give_turnstile();
 
-  void get_turnstile_back(Turnstile *turnstile);
+    void get_turnstile_back(Turnstile *turnstile);
 
- private:
-  void shrink();
+private:
+    void shrink();
 
-  void expand();
+    void expand();
 };
 
 class Mutex {
- public:
-  Turnstile *ptr;
+public:
+    Turnstile *ptr;
 
-  Mutex();
+    Mutex();
 
-  Mutex(const Mutex &) = delete;
+    Mutex(const Mutex &) = delete;
 
-  void lock();    // NOLINT
-  void unlock();  // NOLINT
+    void lock();    // NOLINT
+
+    void unlock();  // NOLINT
 };
 
 #endif  // SRC_TURNSTILE_H_
